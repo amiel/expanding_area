@@ -1,7 +1,12 @@
 
-
 $.fn.expanding_area = (function() {
     var template = "<pre><span></span><br/></pre>";
+
+    var update_fn = function(area, span) {
+        return function() {
+            span.text(area.val());
+        };
+    };
 
     return function() {
         return this.each(function() {
@@ -9,12 +14,12 @@ $.fn.expanding_area = (function() {
             area.wrap('<div class="expanding_area" />');
             area.before(template);
 
-            var container = area.parent(),
-                span = container.find('span');
+            var container = area.parent();
+            var span = container.find('span');
+            var updater = update_fn(area, span);
 
-            area.bind('input', function() {
-                span.text(area.val());
-            });
+            area.bind('input', updater);
+            updater();
 
             container.addClass('active');
         });
